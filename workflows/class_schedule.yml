@@ -1,0 +1,61 @@
+name: Class Schedule CI/CD
+
+on:
+  push:
+    paths:
+      - 'src/features/class-schedule/**'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - 'src/features/class-schedule/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    container:
+      image: node:16-alpine
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v5
+        with:
+          start: npm start
+          wait-on: 'http://localhost:3000'
+
+  deploy-staging:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to staging
+        run: |
+          echo "Deploying to staging..."
+          # Staging deployment steps
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests..."
+          # Smoke test steps
