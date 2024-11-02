@@ -3,29 +3,41 @@ import { SessionBooking } from '../SessionBooking';
 
 const mockTrainer = {
   id: 1,
-  name: 'Sarah Johnson',
-  availability: [
-    { date: '2024-01-15', slots: ['09:00', '10:00'] }
-  ]
+  name: 'Test Trainer',
+  availability: [{
+    date: '2024-01-15',
+    times: ['09:00', '10:00']
+  }]
 };
 
 describe('SessionBooking Component', () => {
+  const mockOnBookingComplete = jest.fn();
+
   it('renders booking form', () => {
-    render(<SessionBooking trainer={mockTrainer} />);
+    render(
+      <SessionBooking 
+        trainer={mockTrainer} 
+        onBookingComplete={mockOnBookingComplete}
+      />
+    );
     expect(true).toBe(true);
   });
 
-  it('shows available time slots for selected date', () => {
-    render(<SessionBooking trainer={mockTrainer} />);
+  it('shows available time slots', () => {
+    render(
+      <SessionBooking 
+        trainer={mockTrainer} 
+        onBookingComplete={mockOnBookingComplete}
+      />
+    );
     expect(true).toBe(true);
   });
 
   it('handles form submission', () => {
-    const onBookingComplete = jest.fn();
     render(
       <SessionBooking 
         trainer={mockTrainer} 
-        onBookingComplete={onBookingComplete} 
+        onBookingComplete={mockOnBookingComplete}
       />
     );
     expect(true).toBe(true);
