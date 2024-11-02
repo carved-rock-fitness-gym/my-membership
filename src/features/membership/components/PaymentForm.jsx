@@ -1,6 +1,7 @@
 // src/features/membership/components/PaymentForm.jsx
 import React, { useState } from 'react';
 import { validationUtils } from '../../../utils/validation';
+import PropTypes from 'prop-types'
 
 export const PaymentForm = ({ tier, onSuccess }) => {
   const [formData, setFormData] = useState({
@@ -182,3 +183,12 @@ export const PaymentForm = ({ tier, onSuccess }) => {
     </div>
   );
 };
+
+PaymentForm.propTypes = {
+	tier: PropTypes.shape({
+		price: PropTypes.number.isRequired
+	}).isRequired,
+	onSuccess: PropTypes.func.isRequired
+}
+
+export default PaymentForm

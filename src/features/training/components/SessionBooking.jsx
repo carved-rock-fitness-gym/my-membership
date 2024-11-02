@@ -1,29 +1,27 @@
 import React, { useState } from 'react';
 import { trainingService } from '../../../services/training';
+import PropTypes from 'prop-types';
 
 export const SessionBooking = ({ trainer, onBookingComplete }) => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const availableSlots = trainer?.availability?.find(a => a.date === selectedDate)?.slots || [];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedDate || !selectedTime) {
-      setError('Please select both date and time');
       return;
     }
 
     setLoading(true);
-    setError(null);
 
     try {
       await trainingService.bookTrainingSession(trainer.id, selectedDate, selectedTime);
       onBookingComplete();
     } catch (error) {
-      setError('Failed to book session. Please try again.');
+      console.error('Failed to book session:', error);
     } finally {
       setLoading(false);
     }
@@ -71,12 +69,6 @@ export const SessionBooking = ({ trainer, onBookingComplete }) => {
           </select>
         </div>
 
-        {error && (
-          <div className="bg-red-50 text-red-500 p-3 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
         <button
           type="submit"
           disabled={loading || !selectedDate || !selectedTime}
@@ -99,4 +91,18 @@ export const SessionBooking = ({ trainer, onBookingComplete }) => {
       </div>
     </div>
   );
+};
+
+SessionBooking.propTypes = {
+  trainer: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    availability: PropTypes.arrayOf(PropTypes.shape({
+      date: PropTypes.string.isRequired,
+      times: PropTypes.arrayOf(PropTypes.string).isRequired
+    })).isRequired,
+    specialties: PropTypes.arrayOf(PropTypes.string).isRequired,
+    experience: PropTypes.string.isRequired
+  }).isRequired,
+  onBookingComplete: PropTypes.func.isRequired
 };

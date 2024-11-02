@@ -1,5 +1,6 @@
 // src/features/membership/components/MembershipTiers.jsx
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const MembershipTiers = ({ onTierSelect }) => {
   const tiers = [
@@ -89,4 +90,8 @@ export const MembershipTiers = ({ onTierSelect }) => {
       ))}
     </div>
   );
+};
+
+MembershipTiers.propTypes = {
+  onTierSelect: PropTypes.func.isRequired
 };

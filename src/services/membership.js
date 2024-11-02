@@ -41,5 +41,9 @@ export const membershipService = {
           location: 'Main Gym'
         }
       ];
+    },
+  
+    async processMembershipPayment(_paymentDetails) {
+      // ... implementation
     }
   };

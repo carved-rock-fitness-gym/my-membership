@@ -1,6 +1,7 @@
 // src/features/class-schedule/components/ClassList.jsx
 import React from 'react';
 import { classScheduleService } from '../../../services/classSchedule';
+import PropTypes from 'prop-types'
 
 export const ClassList = ({ date, onClassSelect }) => {
   const [classes, setClasses] = React.useState([]);
@@ -68,3 +69,8 @@ export const ClassList = ({ date, onClassSelect }) => {
     </div>
   );
 };
+
+ClassList.propTypes = {
+	date: PropTypes.instanceOf(Date).isRequired,
+	onClassSelect: PropTypes.func.isRequired
+}

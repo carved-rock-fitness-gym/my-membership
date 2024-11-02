@@ -1,5 +1,5 @@
 export const classScheduleService = {
-    async getClassesByDate(date) {
+    async getClassesByDate(_date) {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 500));
   
@@ -40,7 +40,7 @@ export const classScheduleService = {
       return classes;
     },
   
-    async bookClass(classId, memberId) {
+    async bookClass(_classId, _memberId) {
       await new Promise(resolve => setTimeout(resolve, 500));
       return {
         success: true,
@@ -48,7 +48,7 @@ export const classScheduleService = {
       };
     },
   
-    async cancelBooking(bookingId) {
+    async cancelBooking(_bookingId) {
       await new Promise(resolve => setTimeout(resolve, 500));
       return {
         success: true

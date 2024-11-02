@@ -1,5 +1,6 @@
 // src/features/membership/components/MembershipCard.jsx
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const MembershipCard = ({ tier }) => {
   return (
@@ -58,6 +59,13 @@ export const MembershipCard = ({ tier }) => {
     </div>
   );
 };
+
+MembershipCard.propTypes = {
+	tier: PropTypes.shape({
+		name: PropTypes.string.isRequired,
+		price: PropTypes.number.isRequired
+	}).isRequired
+}
 
 
 

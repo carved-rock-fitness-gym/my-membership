@@ -1,6 +1,7 @@
 // src/features/class-schedule/components/Calendar.jsx
 import React from "react";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import PropTypes from 'prop-types'
 
 export const Calendar = ({ selectedDate, onDateSelect }) => {
   return (
@@ -14,3 +15,8 @@ export const Calendar = ({ selectedDate, onDateSelect }) => {
     </div>
   );
 };
+
+Calendar.propTypes = {
+	selectedDate: PropTypes.instanceOf(Date).isRequired,
+	onDateSelect: PropTypes.func.isRequired
+}
