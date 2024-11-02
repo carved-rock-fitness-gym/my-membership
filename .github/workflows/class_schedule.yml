@@ -29,7 +29,12 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ ! -f package-lock.json ]; then
+            npm install
+          else
+            npm ci
+          fi
 
       - name: Run lint
         run: npm run lint
