@@ -1,6 +1,7 @@
 // src/features/class-schedule/components/BookingModal.jsx
 import React from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import PropTypes from 'prop-types'
 
 export const BookingModal = ({ isOpen, onClose, classData }) => {
   if (!classData) return null;
@@ -40,3 +41,14 @@ export const BookingModal = ({ isOpen, onClose, classData }) => {
     </Dialog>
   );
 };
+
+BookingModal.propTypes = {
+	isOpen: PropTypes.bool.isRequired,
+	onClose: PropTypes.func.isRequired,
+	classData: PropTypes.shape({
+		name: PropTypes.string.isRequired,
+		instructor: PropTypes.string.isRequired,
+		time: PropTypes.string.isRequired,
+		duration: PropTypes.number.isRequired
+	}).isRequired
+}

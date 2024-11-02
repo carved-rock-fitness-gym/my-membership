@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export const TrainerList = ({ onTrainerSelect }) => {
   const trainers = [
@@ -56,4 +57,8 @@ export const TrainerList = ({ onTrainerSelect }) => {
       ))}
     </div>
   );
+};
+
+TrainerList.propTypes = {
+  onTrainerSelect: PropTypes.func.isRequired
 };

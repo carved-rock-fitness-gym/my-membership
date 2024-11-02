@@ -1,6 +1,7 @@
 // src/components/Layout.jsx
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types'
 
 export const Layout = ({ children }) => {
   const location = useLocation();
@@ -89,3 +90,7 @@ export const Layout = ({ children }) => {
     </div>
   );
 };
+
+Layout.propTypes = {
+	children: PropTypes.node
+}

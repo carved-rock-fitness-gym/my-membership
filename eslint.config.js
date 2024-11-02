@@ -42,9 +42,12 @@ export default [
 			'react/react-in-jsx-scope': 'off',
 			'no-unused-vars': ['error', { 
 				argsIgnorePattern: '^_',
-				varsIgnorePattern: '^_'
+				varsIgnorePattern: '^(React|_)',
+				destructuredArrayIgnorePattern: '^_'
 			}],
-			'react/prop-types': 'error'
+			'react/prop-types': ['error', {
+				ignore: ['className', 'children', 'classNames']
+			}]
 		},
 	},
 	// Test-specific config
@@ -82,6 +85,12 @@ export default [
 				expect: true,
 				beforeEach: true,
 			}
+		},
+		rules: {
+			'no-unused-vars': ['error', {
+				argsIgnorePattern: '^(on|config|_)',
+				varsIgnorePattern: '^_'
+			}]
 		}
 	}
 ]
