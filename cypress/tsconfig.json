@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"target": "es2021",
+		"lib": ["es2021", "dom"],
+		"types": ["cypress", "node"],
+		"moduleResolution": "node",
+		"module": "ESNext",
+		"esModuleInterop": true,
+		"allowJs": true,
+		"skipLibCheck": true
+	},
+	"include": ["**/*.ts"]
+} 
