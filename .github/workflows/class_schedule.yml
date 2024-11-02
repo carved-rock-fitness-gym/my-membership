@@ -38,6 +38,7 @@ jobs:
         with:
           start: npm run dev
           wait-on: 'http://localhost:5173'
+          config-file: cypress.config.ts
 
   deploy-staging:
     needs: build-and-test
