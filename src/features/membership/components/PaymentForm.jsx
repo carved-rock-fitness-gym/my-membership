@@ -13,6 +13,7 @@ export const PaymentForm = ({ tier, onSuccess }) => {
   });
   
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -24,6 +25,7 @@ export const PaymentForm = ({ tier, onSuccess }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
     
     // Validate form
     const newErrors = {};
@@ -50,8 +52,8 @@ export const PaymentForm = ({ tier, onSuccess }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       onSuccess();
-    } catch (error) {
-      // No need to setError here, as it's not used
+    } catch (err) {
+      setError('Payment processing failed. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -59,6 +61,12 @@ export const PaymentForm = ({ tier, onSuccess }) => {
 
   return (
     <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
+      {error && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {error}
+        </div>
+      )}
+      
       <h3 className="text-xl font-bold mb-4">Payment Details</h3>
       
       <div className="mb-6">
