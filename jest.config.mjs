@@ -7,5 +7,9 @@ export default {
 	},
 	transform: {
 		'^.+\\.(js|jsx)$': 'babel-jest'
-	}
+	},
+	testEnvironmentOptions: {
+		customExportConditions: ['react-native']
+	},
+	setupFiles: ['<rootDir>/jest.polyfills.js']
 }; 
