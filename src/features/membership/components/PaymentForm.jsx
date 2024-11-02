@@ -52,8 +52,8 @@ export const PaymentForm = ({ tier, onSuccess }) => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       onSuccess();
-    } catch (err) {
-      setError('Payment processing failed. Please try again.');
+    } catch (error) {
+      setError('Payment processing failed. Please try again: ' + error.message);
     } finally {
       setLoading(false);
     }
