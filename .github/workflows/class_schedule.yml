@@ -34,7 +34,7 @@ jobs:
       - name: Run lint
         run: npm run lint
         env:
-          NODE_OPTIONS: "--experimental-vm-modules"
+          NODE_OPTIONS: "--experimental-vm-modules --no-warnings"
 
       - name: Build application
         run: npm run build
