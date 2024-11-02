@@ -9,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'src/features/class-schedule/**'
+  workflow_dispatch:
 
 jobs:
   build-and-test:
