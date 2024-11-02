@@ -14,27 +14,18 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
-    container:
-      image: node:20-alpine
-
+    
     steps:
       - uses: actions/checkout@v3
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
+          node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          if [ ! -f package-lock.json ]; then
-            npm install
-          else
-            npm ci
-          fi
+        run: npm install
 
       - name: Run lint
         run: npm run lint
@@ -47,8 +38,8 @@ jobs:
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
-          start: npm start
-          wait-on: 'http://localhost:3000'
+          start: npm run dev
+          wait-on: 'http://localhost:5173'
 
   deploy-staging:
     needs: build-and-test
