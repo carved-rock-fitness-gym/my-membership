@@ -4,6 +4,8 @@ import { SessionBooking } from '../SessionBooking';
 const mockTrainer = {
   id: 1,
   name: 'Test Trainer',
+  specialties: ['Strength Training', 'HIIT'],
+  experience: '5 years',
   availability: [{
     date: '2024-01-15',
     times: ['09:00', '10:00']
