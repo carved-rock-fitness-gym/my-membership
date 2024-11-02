@@ -61,5 +61,33 @@ jobs:
         
       - name: Deploy to development
         run: |
-          echo "Deploying to development..."
-          # Development deployment steps
+          echo "Deploying training feature to development..."
+          echo "Environment URL: ${{ vars.APP_URL }}"
+
+  staging:
+    needs: development
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: staging
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to staging
+        run: |
+          echo "Deploying training feature to staging..."
+          echo "Environment URL: ${{ vars.APP_URL }}"
+
+  production:
+    needs: staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploying training feature to production..."
+          echo "Environment URL: ${{ vars.APP_URL }}"

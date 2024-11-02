@@ -37,23 +37,38 @@ jobs:
         uses: cypress-io/github-action@v5
         with:
           start: npm run dev
-          wait-on: 'http://localhost:5173'
+          wait-on: ${{ vars.APP_URL }}
           config-file: cypress.config.ts
 
   deploy-staging:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
+    environment: staging
     
     steps:
       - uses: actions/checkout@v3
       
       - name: Deploy to staging
         run: |
-          echo "Deploying to staging..."
-          # Staging deployment steps
+          echo "Deploying class schedule feature to staging..."
+          echo "Environment URL: ${{ vars.APP_URL }}"
 
       - name: Run smoke tests
         run: |
           echo "Running smoke tests..."
           # Smoke test steps
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to production
+        run: |
+          echo "Deploying class schedule feature to production..."
+          echo "Environment URL: ${{ vars.APP_URL }}"
