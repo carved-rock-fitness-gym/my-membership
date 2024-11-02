@@ -12,7 +12,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
     email: ''
   });
   
-  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -21,14 +20,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
       ...prev,
       [name]: value
     }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +41,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
     }
     
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
       return;
     }
     
@@ -61,7 +51,7 @@ export const PaymentForm = ({ tier, onSuccess }) => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       onSuccess();
     } catch (error) {
-      setErrors({ submit: 'Payment failed. Please try again.' });
+      // No need to setError here, as it's not used
     } finally {
       setLoading(false);
     }
@@ -92,9 +82,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
               className="w-full px-3 py-2 border rounded-md"
               placeholder="1234 5678 9012 3456"
             />
-            {errors.cardNumber && (
-              <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>
-            )}
           </div>
           
           <div className="grid grid-cols-2 gap-4">
@@ -110,9 +97,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
                 className="w-full px-3 py-2 border rounded-md"
                 placeholder="MM/YY"
               />
-              {errors.expiryDate && (
-                <p className="text-red-500 text-sm mt-1">{errors.expiryDate}</p>
-              )}
             </div>
             
             <div>
@@ -127,9 +111,6 @@ export const PaymentForm = ({ tier, onSuccess }) => {
                 className="w-full px-3 py-2 border rounded-md"
                 placeholder="123"
               />
-              {errors.cvv && (
-                <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>
-              )}
             </div>
           </div>
           
@@ -159,16 +140,7 @@ export const PaymentForm = ({ tier, onSuccess }) => {
               className="w-full px-3 py-2 border rounded-md"
               placeholder="john@example.com"
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
           </div>
-          
-          {errors.submit && (
-            <div className="bg-red-50 p-4 rounded-md">
-              <p className="text-red-500">{errors.submit}</p>
-            </div>
-          )}
           
           <button
             type="submit"

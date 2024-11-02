@@ -10,7 +10,7 @@ export const membershipService = {
       };
     },
   
-    async upgradeMembership(newTier, paymentDetails) {
+    async upgradeMembership(newTier, _paymentDetails) {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       return {
