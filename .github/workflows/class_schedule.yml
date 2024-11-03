@@ -4,11 +4,13 @@ on:
   push:
     paths:
       - 'src/features/class-schedule/**'
+      - 'Dockerfile'
     branches:
       - main
   pull_request:
     paths:
       - 'src/features/class-schedule/**'
+      - 'Dockerfile'
   workflow_dispatch:
 
 jobs:
@@ -30,14 +32,24 @@ jobs:
       - name: Run lint
         run: NODE_OPTIONS=--experimental-vm-modules npm run lint
 
-      - name: Build application
-        run: npm run build
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: carved-rock/class-schedule:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
           start: npm run dev
-          wait-on: ${{ vars.APP_URL }}
+          wait-on: 'http://localhost:5173'
           config-file: cypress.config.ts
 
   deploy-staging:
@@ -49,15 +61,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Build for staging
+        run: |
+          echo "Building for staging environment..."
+          docker build -t carved-rock/class-schedule:staging .
+
       - name: Deploy to staging
         run: |
           echo "Deploying class schedule feature to staging..."
-          echo "Environment URL: ${{ vars.APP_URL }}"
-
-      - name: Run smoke tests
-        run: |
-          echo "Running smoke tests..."
-          # Smoke test steps
+          echo "Running smoke tests against staging deployment..."
 
   deploy-production:
     needs: deploy-staging
@@ -68,7 +80,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
+      - name: Build for production
+        run: |
+          echo "Building for production environment..."
+          docker build -t carved-rock/class-schedule:production .
+
       - name: Deploy to production
         run: |
           echo "Deploying class schedule feature to production..."
-          echo "Environment URL: ${{ vars.APP_URL }}"
