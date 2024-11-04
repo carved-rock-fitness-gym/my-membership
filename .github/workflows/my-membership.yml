@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "Selected team: ${{ github.event.inputs.team }}"
           if [[ "${{ github.event.inputs.team }}" == "atlas" ]]; then
-            gh workflow run class-schedule.yml -R ${{ github.repository }}
+            gh workflow run class_schedule.yml -R ${{ github.repository }}
           elif [[ "${{ github.event.inputs.team }}" == "beacon" ]]; then
             gh workflow run membership.yml -R ${{ github.repository }}
           else
