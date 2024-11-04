@@ -16,17 +16,11 @@ jobs:
   class-schedule:
     if: github.event.inputs.feature == 'class_schedule'
     uses: ./.github/workflows/class_schedule.yml
-    with:
-      environment: production
 
   membership:
     if: github.event.inputs.feature == 'membership'
     uses: ./.github/workflows/membership.yml
-    with:
-      environment: production
 
   training:
     if: github.event.inputs.feature == 'training'
     uses: ./.github/workflows/training.yml
-    with:
-      environment: production
