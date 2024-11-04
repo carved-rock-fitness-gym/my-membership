@@ -1,11 +1,11 @@
 name: Membership Management Pipeline
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'src/features/membership/**'
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
 
 jobs:
   security:

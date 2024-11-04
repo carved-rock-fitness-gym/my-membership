@@ -1,16 +1,10 @@
 name: MyMembership
 
-env:
-  GH_TOKEN: ${{ github.token }}
-
-permissions:
-  actions: write
-
 on:
   workflow_dispatch:
     inputs:
-      team:
-        description: 'Which feature'
+      feature:
+        description: 'Which feature to deploy'
         required: true
         type: choice
         options:
@@ -19,19 +13,20 @@ on:
           - training
 
 jobs:
-  delegate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        
-      - name: Trigger team workflow
-        run: |
-          echo "Selected team: ${{ github.event.inputs.team }}"
-          if [[ "${{ github.event.inputs.team }}" == "class_schedule" ]]; then
-            gh workflow run class_schedule.yml -R ${{ github.repository }}
-          elif [[ "${{ github.event.inputs.team }}" == "membership" ]]; then
-            gh workflow run membership.yml -R ${{ github.repository }}
-          else
-            gh workflow run training.yml -R ${{ github.repository }}
-          fi
+  class-schedule:
+    if: github.event.inputs.feature == 'class_schedule'
+    uses: ./.github/workflows/class_schedule.yml
+    with:
+      environment: production
+
+  membership:
+    if: github.event.inputs.feature == 'membership'
+    uses: ./.github/workflows/membership.yml
+    with:
+      environment: production
+
+  training:
+    if: github.event.inputs.feature == 'training'
+    uses: ./.github/workflows/training.yml
+    with:
+      environment: production
