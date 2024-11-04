@@ -1,0 +1,27 @@
+name: MyMembership
+
+on:
+  workflow_dispatch:
+    inputs:
+      team:
+        description: 'Which team workflow to run'
+        required: true
+        type: choice
+        options:
+          - atlas
+          - beacon
+          - catalyst
+
+jobs:
+  delegate:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "Selected team: ${{ github.event.inputs.team }}"
+          if [[ "${{ github.event.inputs.team }}" == "atlas" ]]; then
+            gh workflow run class-schedule.yml
+          elif [[ "${{ github.event.inputs.team }}" == "beacon" ]]; then
+            gh workflow run membership.yml
+          else
+            gh workflow run training.yml
+          fi
