@@ -3,6 +3,10 @@ name: MyMembership
 env:
   GH_TOKEN: ${{ github.token }}
 
+# Add specific permissions needed for workflow dispatch
+permissions:
+  actions: write
+
 on:
   workflow_dispatch:
     inputs:
