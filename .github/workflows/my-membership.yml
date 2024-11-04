@@ -3,7 +3,6 @@ name: MyMembership
 env:
   GH_TOKEN: ${{ github.token }}
 
-# Add specific permissions needed for workflow dispatch
 permissions:
   actions: write
 
@@ -11,13 +10,13 @@ on:
   workflow_dispatch:
     inputs:
       team:
-        description: 'Which team workflow to run'
+        description: 'Which feature'
         required: true
         type: choice
         options:
-          - atlas
-          - beacon
-          - catalyst
+          - class_schedule
+          - membership
+          - training
 
 jobs:
   delegate:
@@ -29,9 +28,9 @@ jobs:
       - name: Trigger team workflow
         run: |
           echo "Selected team: ${{ github.event.inputs.team }}"
-          if [[ "${{ github.event.inputs.team }}" == "atlas" ]]; then
+          if [[ "${{ github.event.inputs.team }}" == "class_schedule" ]]; then
             gh workflow run class_schedule.yml -R ${{ github.repository }}
-          elif [[ "${{ github.event.inputs.team }}" == "beacon" ]]; then
+          elif [[ "${{ github.event.inputs.team }}" == "membership" ]]; then
             gh workflow run membership.yml -R ${{ github.repository }}
           else
             gh workflow run training.yml -R ${{ github.repository }}
