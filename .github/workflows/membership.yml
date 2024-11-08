@@ -1,7 +1,11 @@
 name: Membership Management Pipeline
 
 on:
-  workflow_call:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/features/membership/**'
+  workflow_dispatch:
 
 jobs:
   security:
@@ -23,11 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: ./.github/actions/setup-node
         with:
           node-version: '20.x'
           cache: 'npm'
+          clean-install: 'true'
 
       - name: Install dependencies
         run: |

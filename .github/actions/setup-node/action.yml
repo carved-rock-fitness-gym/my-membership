@@ -1,0 +1,43 @@
+name: 'Setup Node.js Environment'
+description: 'Sets up Node.js and installs dependencies'
+
+inputs:
+  node-version:
+    description: 'Node.js version to use'
+    required: false
+    default: '20.x'
+  cache:
+    description: 'Cache to use (npm/yarn)'
+    required: false
+    default: 'npm'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate cache input
+      shell: bash
+      run: |
+        if [[ "${{ inputs.cache }}" != "npm" && "${{ inputs.cache }}" != "yarn" ]]; then
+          echo "Error: cache must be either 'npm' or 'yarn'"
+          exit 1
+        fi
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: ${{ inputs.cache }}
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        if [ "${{ inputs.clean-install }}" = "true" ]; then
+          rm -rf node_modules package-lock.json
+          npm install
+        else
+          npm ci
+        fi
+
+    - name: Build
+      shell: bash
+      run: npm run build
