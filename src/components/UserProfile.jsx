@@ -1,4 +1,5 @@
 // Fixed linting issues - 2025-04-30
+// Fixed linting issues - 2025-04-30
 // This component has intentional camelCase violations and unused variables
 import { useState } from 'react';
 import PropTypes from 'prop-types';
