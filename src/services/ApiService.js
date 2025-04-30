@@ -1,4 +1,5 @@
 // Fixed linting issues - 2025-04-30
+// Fixed linting issues - 2025-04-30
 // This service has various linting issues
 const API_BASE_URL = "https://api.carvedrockfitness.com/v1"  // Missing semicolon and using double quotes
 
