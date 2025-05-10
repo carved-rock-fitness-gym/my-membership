@@ -1,41 +1,57 @@
-// Fixed linting issues - 2025-04-30
-// This service has various linting issues
-const API_BASE_URL = "https://api.carvedrockfitness.com/v1"  // Missing semicolon and using double quotes
+/**
+ * Base URL for the API endpoints
+ */
+const API_BASE_URL = 'https://api.carvedrockfitness.com/v1';
 
-// Function with line length and indentation issues
+/**
+ * Fetches available membership plans
+ * @returns {Promise<Array>} Array of membership plans
+ * @throws {Error} If the API request fails
+ */
 export const fetchMembershipPlans = async () => {
-    const response = await fetch(\/membership/plans)  // Missing semicolon
-    
-    if (!response.ok) {
-        throw new Error(Failed to fetch membership plans: \)  // Missing semicolon
-    }
-    
-    return response.json();
-}
+  const response = await fetch(`${API_BASE_URL}/membership/plans`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch membership plans');
+  }
+  
+  return response.json();
+};
 
-// Function with camelCase violations
-export const fetch_user_profile = async (user_id) => {  // camelCase violation
-    const response = await fetch(\/users/\/profile);
-    return response.json();
-}
+/**
+ * Fetches user profile information
+ * @param {string} userId - The ID of the user
+ * @returns {Promise<Object>} User profile data
+ * @throws {Error} If the API request fails
+ */
+export const fetchUserProfile = async (userId) => {
+  const response = await fetch(`${API_BASE_URL}/users/${userId}/profile`);
+  
+  if (!response.ok) {
+    throw new Error('Failed to fetch user profile');
+  }
+  
+  return response.json();
+};
 
-// Function with multiple issues
-export const processPayment = async (payment_details) => {  // camelCase violation
-    console.log("Processing payment", payment_details);  // Console warning and double quotes
-    
-    const response = await fetch(\/payments/process, {
-                method: "POST",  // Wrong indentation and double quotes
-                headers: {
-                    "Content-Type": "application/json"  // Double quotes
-                },
-                body: JSON.stringify(payment_details)
-            });
-    
-    return response.json();
-}
-
-// Unused function
-export const unused_function = () => {  // camelCase violation
-    const unused_var = "This is not used";  // camelCase violation and unused variable
-    return true;
-}
+/**
+ * Processes a payment transaction
+ * @param {Object} paymentDetails - Payment information
+ * @returns {Promise<Object>} Payment processing result
+ * @throws {Error} If the payment processing fails
+ */
+export const processPayment = async (paymentDetails) => {
+  const response = await fetch(`${API_BASE_URL}/payments/process`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(paymentDetails)
+  });
+  
+  if (!response.ok) {
+    throw new Error('Failed to process payment');
+  }
+  
+  return response.json();
+};
