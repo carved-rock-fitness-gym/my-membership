@@ -8,7 +8,7 @@ export const fetchMembershipPlans = async () => {
     const response = await fetch(\/membership/plans);
     
     if (!response.ok) {
-        throw new Error(Failed to fetch membership plans: \\\)
+        throw new Error(Failed to fetch membership plans: \\)
     }
     
     return response.json();
