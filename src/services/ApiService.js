@@ -7,7 +7,7 @@ export const fetchMembershipPlans = async () => {
     const response = await fetch(\/membership/plans)  // Missing semicolon
     
     if (!response.ok) {
-        throw new Error(Failed to fetch membership plans: \\\\)  // Missing semicolon
+        throw new Error(Failed to fetch membership plans: \\\\\)  // Missing semicolon
     }
     
     return response.json();
