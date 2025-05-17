@@ -26,8 +26,8 @@ jobs:
         
       - name: Run ESLint and Capture Results
         id: eslint
-        run: |
-          curl -f -X POST -H "Content-Type: application/json" \\
-          -d '{"pull_request_number":"${{ github.event.pull_request.number }}"}'
-          https://atalearning.app.n8n.cloud/webhook/webhook-test/ef233235-16bd-4648-9455-2149f11204ac
         if: github.event_name == 'pull_request'
+        run: |
+          curl -f -X POST -H "Content-Type: application/json" \
+          -d "{\"pull_request_number\":\"${{ github.event.pull_request.number }}\"}" \
+          https://atalearning.app.n8n.cloud/webhook/webhook-test/ef233235-16bd-4648-9455-2149f11204ac
