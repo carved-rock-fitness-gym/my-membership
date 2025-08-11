@@ -29,17 +29,20 @@ const WorkoutCard = ({ workout, onSave }) => {
                         checked={completed} 
                         onChange={(e) => setCompleted(e.target.checked)}
                     />
-                    Mark as Completed
+                    Completed
                 </label>
                 <textarea
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
-                    placeholder="How was your workout? Leave some feedback here to help track your progress over time and make adjustments to your fitness routine based on what works best for your body and goals."  // Line too long
+                    placeholder="Add feedback or notes..."
+                    className="feedback-input"
                 />
-                <button onClick={handleSubmit}>Save Progress</button>
+                <button onClick={handleSubmit} className="save-button">
+                    Save Workout Progress
+                </button>
             </div>
         </div>
-    )  // Missing semicolon
+    )
 }
 
-export default WorkoutCard
+export default WorkoutCard;
