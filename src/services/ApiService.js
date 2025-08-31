@@ -4,23 +4,32 @@ export class ApiService {
     }
 
     async authenticateUser(credentials) {
-      const response = await fetch(`${this.baseUrl}/auth`, {
-        method: 'POST',
-        body: JSON.stringify(credentials)
-      });
-      
-      const userData = await response.json();
-      
-      // Security violation - logs sensitive data
-      console.log('User authenticated:', userData.password);
-      
-      // Logic error - assignment instead of equality check
-      if (userData.role = 'admin') {
-        return userData;
+      try {
+        const response = await fetch(`${this.baseUrl}/auth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
+        });
+
+        if (!response.ok) {
+          throw new Error(`Authentication failed (${response.status})`);
+        }
+
+        const userData = await response.json();
+
+        // Do NOT log sensitive information such as passwords or tokens
+
+        if (userData.role === 'admin') {
+          return userData;
+        }
+
+        const sessionToken = userData.token;
+        return { token: sessionToken };
+      } catch (error) {
+        // TODO: Integrate with centralized logging (e.g., Sentry) without exposing sensitive data
+        throw error;
       }
-      
-      // Style issue - using var in ES6+ codebase
-      var sessionToken = userData.token;
-      return { token: sessionToken };
     }
   }
