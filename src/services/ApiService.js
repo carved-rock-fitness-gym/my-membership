@@ -1,41 +1,35 @@
-// Fixed linting issues - 2025-04-30
-// This service has various linting issues
-const API_BASE_URL = "https://api.carvedrockfitness.com/v1"  // Missing semicolon and using double quotes
-
-// Function with line length and indentation issues
-export const fetchMembershipPlans = async () => {
-    const response = await fetch(\/membership/plans)  // Missing semicolon
-    
-    if (!response.ok) {
-        throw new Error(Failed to fetch membership plans: \\)  // Missing semicolon
+export class ApiService {
+    constructor(baseUrl) {
+      this.baseUrl = baseUrl;
     }
-    
-    return response.json();
-}
 
-// Function with camelCase violations
-export const fetch_user_profile = async (user_id) => {  // camelCase violation
-    const response = await fetch(\/users/\/profile);
-    return response.json();
-}
+    async authenticateUser(credentials) {
+      try {
+        const response = await fetch(`${this.baseUrl}/auth`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(credentials),
+        });
 
-// Function with multiple issues
-export const processPayment = async (payment_details) => {  // camelCase violation
-    console.log("Processing payment", payment_details);  // Console warning and double quotes
-    
-    const response = await fetch(\/payments/process, {
-                method: "POST",  // Wrong indentation and double quotes
-                headers: {
-                    "Content-Type": "application/json"  // Double quotes
-                },
-                body: JSON.stringify(payment_details)
-            });
-    
-    return response.json();
-}
+        if (!response.ok) {
+          throw new Error(`Authentication failed (${response.status})`);
+        }
 
-// Unused function
-export const unused_function = () => {  // camelCase violation
-    const unused_var = "This is not used";  // camelCase violation and unused variable
-    return true;
-}
+        const userData = await response.json();
+
+        // Do NOT log sensitive information such as passwords or tokens
+
+        if (userData.role === 'admin') {
+          return userData;
+        }
+
+        const sessionToken = userData.token;
+        return { token: sessionToken };
+      } catch (error) {
+        // TODO: Integrate with centralized logging (e.g., Sentry) without exposing sensitive data
+        throw error;
+      }
+    }
+  }
