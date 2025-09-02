@@ -1,41 +1,43 @@
-// Fixed linting issues - 2025-04-30
-// This service has various linting issues
-const API_BASE_URL = "https://api.carvedrockfitness.com/v1"  // Missing semicolon and using double quotes
+// API Service with intentional issues for BugBot demo
+// This service demonstrates common coding issues that BugBot can catch
 
-// Function with line length and indentation issues
+// Security issue: Hardcoded API URL without environment configuration
+const API_BASE_URL = "https://api.carvedrockfitness.com/v1";
+
+// Function with missing error handling
 export const fetchMembershipPlans = async () => {
-    const response = await fetch(\/membership/plans)  // Missing semicolon
+    const response = await fetch(`${API_BASE_URL}/membership/plans`);
     
-    if (!response.ok) {
-        throw new Error(Failed to fetch membership plans: \\)  // Missing semicolon
-    }
-    
-    return response.json();
-}
+    // Security issue: No response validation
+    return response.json();  // Could fail if response is not JSON
+};
 
-// Function with camelCase violations
-export const fetch_user_profile = async (user_id) => {  // camelCase violation
-    const response = await fetch(\/users/\/profile);
-    return response.json();
-}
+// Function with camelCase violations and missing error handling  
+export const fetch_user_profile = async (user_id) => {
+    const response = await fetch(`${API_BASE_URL}/users/${user_id}/profile`);
+    return response.json();  // No error handling
+};
 
-// Function with multiple issues
-export const processPayment = async (payment_details) => {  // camelCase violation
-    console.log("Processing payment", payment_details);  // Console warning and double quotes
+// Function with security and code quality issues
+export const processPayment = async (payment_details) => {
+    console.log("Processing payment", payment_details);  // Security issue: logging sensitive data
     
-    const response = await fetch(\/payments/process, {
-                method: "POST",  // Wrong indentation and double quotes
-                headers: {
-                    "Content-Type": "application/json"  // Double quotes
-                },
-                body: JSON.stringify(payment_details)
-            });
+    // Missing input validation
+    const response = await fetch(`${API_BASE_URL}/payments/process`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+            // Missing authentication headers
+        },
+        body: JSON.stringify(payment_details)  // No input sanitization
+    });
     
+    // No error handling
     return response.json();
-}
+};
 
-// Unused function
-export const unused_function = () => {  // camelCase violation
-    const unused_var = "This is not used";  // camelCase violation and unused variable
+// Dead code: Unused function
+export const unused_function = () => {
+    const unused_var = "This is not used";
     return true;
-}
+};
