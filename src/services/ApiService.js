@@ -21,11 +21,6 @@ export class ApiService {
 
         // Do NOT log sensitive information such as passwords or tokens
 
-        // Dead code: Unused function
-        export const unused_function = () => {
-          const unused_var = "This is not used";
-          return true;
-        };
         if (userData.role === 'admin') {
           return userData;
         }
