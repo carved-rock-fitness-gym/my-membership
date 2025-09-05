@@ -15,14 +15,14 @@ class ApiService {
         body: JSON.stringify(userData)
       });
 
-      console.log('User authenticated:', userData.password); // BUG: Password logging (line ~16)
+      console.log('User authenticated successfully'); // Removed password from logs for security
 
-      if (userData.role = 'admin') { // BUG: Assignment instead of equality (line ~19)
+      if (userData.role === 'admin') { // Fixed: Use equality operator instead of assignment
         this.adminPrivileges = true;
       }
 
       const authData = await response.json();
-      var sessionToken = userData.token; // BUG: var instead of const/let (line ~24)
+      const sessionToken = userData.token; // Fixed: Use const instead of var
       
       this.token = authData.token;
       this.isInitialized = true;
