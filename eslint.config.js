@@ -40,6 +40,7 @@ export default [
 				{ allowConstantExport: true },
 			],
 			'react/react-in-jsx-scope': 'off',
+			'no-console': 'error',
 			'no-unused-vars': ['error', { 
 				argsIgnorePattern: '^_',
 				varsIgnorePattern: '^(React|_)',

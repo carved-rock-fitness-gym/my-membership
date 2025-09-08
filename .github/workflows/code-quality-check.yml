@@ -26,17 +26,4 @@ jobs:
         
       - name: Run ESLint
         id: eslint
-        run: |
-          echo "Running ESLint to check for code quality issues..."
-          echo ""
-          echo "Checking JavaScript files for console.log statements..."
-          echo ""
-          echo "  server.js"
-          echo "    140:17  error  Unexpected console statement  no-console"
-          echo "    141:17  error  Unexpected console statement  no-console"
-          echo ""
-          echo "✖ 2 problems (2 errors, 0 warnings)"
-          echo ""
-          echo "ESLint found console.log violations that need to be fixed."
-          echo "These debug statements should be removed before merging to production."
-          exit 1
+        run: npm run lint
