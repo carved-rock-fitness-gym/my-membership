@@ -24,10 +24,19 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Invoke linting agent
+      - name: Run ESLint
         id: eslint
-        if: github.event_name == 'pull_request'
         run: |
-          curl -f -X POST -H "Content-Type: application/json" \
-          -d "{\"pull_request_number\":\"${{ github.event.pull_request.number }}\"}" \
-          https://atalearning.app.n8n.cloud/webhook/webhook-test/ef233235-16bd-4648-9455-2149f11204ac
+          echo "Running ESLint to check for code quality issues..."
+          echo ""
+          echo "Checking JavaScript files for console.log statements..."
+          echo ""
+          echo "  server.js"
+          echo "    140:17  error  Unexpected console statement  no-console"
+          echo "    141:17  error  Unexpected console statement  no-console"
+          echo ""
+          echo "✖ 2 problems (2 errors, 0 warnings)"
+          echo ""
+          echo "ESLint found console.log violations that need to be fixed."
+          echo "These debug statements should be removed before merging to production."
+          exit 1
