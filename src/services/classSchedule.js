@@ -1,7 +1,13 @@
+// Import centralized cache manager for better performance
+import { classCache } from '../utils/cache.js';
+
 export const classScheduleService = {
-    async getClassesByDate(_date) {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+    async getClassesByDate(date) {
+      // Check cache first for performance optimization
+      const cacheKey = `classes_${date}`;
+      if (classCache.has(cacheKey)) {
+        return classCache.get(cacheKey);
+      }
   
       // Mock class data
       const classes = [
@@ -37,19 +43,30 @@ export const classScheduleService = {
         }
       ];
   
+      // Cache the results for improved performance
+      classCache.set(cacheKey, classes);
       return classes;
     },
-  
-    async bookClass(_classId, _memberId) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+
+    async bookClass(classId, memberId) {
+      // Removed artificial delay for better performance
+      const bookingId = Math.floor(Math.random() * 1000000);
+      
+      // Store booking in cache for faster retrieval
+      const bookingKey = `booking_${bookingId}`;
+      classCache.set(bookingKey, { classId, memberId, bookingId, timestamp: Date.now() });
+      
       return {
         success: true,
-        bookingId: Math.floor(Math.random() * 1000000)
+        bookingId
       };
     },
-  
-    async cancelBooking(_bookingId) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+
+    async cancelBooking(bookingId) {
+      // Removed artificial delay for better performance
+      const bookingKey = `booking_${bookingId}`;
+      classCache.delete(bookingKey); // Remove from cache
+      
       return {
         success: true
       };
