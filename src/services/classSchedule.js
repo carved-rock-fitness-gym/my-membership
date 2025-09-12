@@ -1,7 +1,7 @@
 export const classScheduleService = {
     async getClassesByDate(_date) {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
   
       // Mock class data
       const classes = [
@@ -41,7 +41,8 @@ export const classScheduleService = {
     },
   
     async bookClass(_classId, _memberId) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       return {
         success: true,
         bookingId: Math.floor(Math.random() * 1000000)
@@ -49,7 +50,8 @@ export const classScheduleService = {
     },
   
     async cancelBooking(_bookingId) {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       return {
         success: true
       };

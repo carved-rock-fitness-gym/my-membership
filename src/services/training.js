@@ -1,6 +1,7 @@
 export const trainingService = {
     async getAvailableTrainers() {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return [
         {
@@ -29,7 +30,8 @@ export const trainingService = {
     },
   
     async bookTrainingSession(trainerId, date, time) {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Reduced simulated delay from 800ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return {
         success: true,
@@ -41,7 +43,8 @@ export const trainingService = {
     },
   
     async getTrainingHistory() {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return [
         {

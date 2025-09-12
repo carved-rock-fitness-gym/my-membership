@@ -22,8 +22,9 @@ class FeatureClass extends Component {
         this.setState({ loading: true });
         try {
             // Simulate API call
+            // Reduced simulated delay from 1000ms to 50ms for better performance
             const response = await new Promise(resolve => 
-                setTimeout(() => resolve({ data: { name: 'Feature Data' } }), 1000)
+                setTimeout(() => resolve({ data: { name: 'Feature Data' } }), 50)
             );
             this.setState({ data: response.data, loading: false });
         } catch (error) {

@@ -1,64 +1,56 @@
-const url = require('url');
-const querystring = require('querystring');
-const fs = require('fs');
+// Removed deprecated url and querystring imports for better performance
+const fs = require('fs').promises; // Use promises version for better async handling
 const path = require('path');
 
-// Helper to parse webhook URLs using deprecated url.parse
+// Helper to parse webhook URLs using modern URL constructor
 function parseWebhookUrl(webhookUrl) {
-  // Using deprecated url.parse instead of new URL()
-  const parsed = url.parse(webhookUrl, true);
+  // Using modern URL constructor for better performance
+  const parsed = new URL(webhookUrl);
   
   return {
     protocol: parsed.protocol,
     hostname: parsed.hostname,
     port: parsed.port,
     pathname: parsed.pathname,
-    query: parsed.query
+    query: Object.fromEntries(parsed.searchParams)
   };
 }
 
-// Helper to build URLs using deprecated url.format
+// Helper to build URLs using modern URL constructor
 function buildApiUrl(endpoint, params) {
-  // Using deprecated url.format instead of URL constructor
-  return url.format({
-    protocol: 'https',
-    hostname: 'api.carvedrockfitness.com',
-    pathname: `/v1/${endpoint}`,
-    query: params
-  });
+  // Using modern URL constructor for better performance
+  const apiUrl = new URL(`/v1/${endpoint}`, 'https://api.carvedrockfitness.com');
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      apiUrl.searchParams.set(key, value);
+    });
+  }
+  return apiUrl.toString();
 }
 
 // Parse authentication tokens from URLs
 function extractTokenFromUrl(requestUrl) {
-  // Using deprecated approach
-  const parsed = url.parse(requestUrl, true);
-  const token = parsed.query.token;
-  
-  // Using deprecated querystring.unescape
-  return token ? querystring.unescape(token) : null;
+  // Using modern URL API for better performance
+  const url = new URL(requestUrl, 'http://localhost');
+  const token = url.searchParams.get('token');
+  return token ? decodeURIComponent(token) : null;
 }
 
-// Build query strings the old way
+// Build query strings using modern URLSearchParams
 function buildQueryString(params) {
-  // Using deprecated querystring.stringify
-  return querystring.stringify(params);
+  // Using modern URLSearchParams for better performance
+  return new URLSearchParams(params).toString();
 }
 
-// File system operations using callbacks (not promises)
-function loadConfig(callback) {
-  // Using callback-based fs.readFile instead of fs.promises
-  fs.readFile(path.join(__dirname, 'config.json'), 'utf8', (err, data) => {
-    if (err) {
-      return callback(err);
-    }
-    
-    try {
-      const config = JSON.parse(data);
-      callback(null, config);
-    } catch (parseErr) {
-      callback(parseErr);
-    }
-  });
+// File system operations using modern async/await
+async function loadConfig() {
+  // Using modern fs.promises for better async handling and performance
+  try {
+    const data = await fs.readFile(path.join(__dirname, 'config.json'), 'utf8');
+    return JSON.parse(data);
+  } catch (error) {
+    throw new Error(`Failed to load config: ${error.message}`);
+  }
 }
 
 module.exports = {

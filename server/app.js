@@ -1,6 +1,5 @@
 const express = require('express');
-const url = require('url');
-const querystring = require('querystring');
+// Removed deprecated url and querystring imports for better performance
 const crypto = require('crypto');
 
 const app = express();
@@ -20,9 +19,9 @@ app.use((req, res, next) => {
 app.post('/api/members/:memberId/check-in', (req, res) => {
   const { memberId } = req.params;
   
-  // Using deprecated url.parse() to parse the full URL
-  const parsedUrl = url.parse(req.url, true);
-  const timestamp = parsedUrl.query.timestamp || Date.now();
+  // Using modern URL API to parse query parameters
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const timestamp = url.searchParams.get('timestamp') || Date.now();
   
   // Simulate check-in logic
   res.json({
@@ -33,26 +32,29 @@ app.post('/api/members/:memberId/check-in', (req, res) => {
   });
 });
 
-// Search endpoint using deprecated querystring
+// Search endpoint using modern URL API
 app.get('/api/search', (req, res) => {
-  // Using deprecated url.parse() instead of new URL()
-  const parsedUrl = url.parse(req.url);
-  const params = querystring.parse(parsedUrl.query);
+  // Using modern URLSearchParams instead of deprecated querystring
+  const urlParams = new URLSearchParams(req.url.split('?')[1]);
+  const params = Object.fromEntries(urlParams);
   
   // Mock search results
   res.json({
-    query: params.q,
+    query: params.q || '',
     results: [],
     total: 0
   });
 });
 
-// Authentication endpoint using deprecated crypto methods
+// Authentication endpoint using modern crypto methods
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   
-  // Using deprecated crypto.createCipher (should use createCipheriv)
-  const cipher = crypto.createCipher('aes192', 'a password');
+  // Using modern crypto.createCipheriv with explicit IV for better security and performance
+  const algorithm = 'aes-256-cbc';
+  const key = crypto.scryptSync('a password', 'salt', 32);
+  const iv = crypto.randomBytes(16);
+  const cipher = crypto.createCipheriv(algorithm, key, iv);
   let encrypted = cipher.update(password, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   
@@ -64,9 +66,9 @@ app.post('/api/auth/login', (req, res) => {
 
 // Membership plans endpoint
 app.get('/api/membership/plans', (req, res) => {
-  // Using url.parse to check for query params
-  const { query } = url.parse(req.url, true);
-  const includeInactive = query.includeInactive === 'true';
+  // Using modern URL API to check for query params
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const includeInactive = url.searchParams.get('includeInactive') === 'true';
   
   const plans = [
     { id: 1, name: 'Basic', price: 29.99, active: true },

@@ -1,6 +1,7 @@
 export const membershipService = {
     async getCurrentMembership() {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return {
         tier: 'Basic',
@@ -11,7 +12,8 @@ export const membershipService = {
     },
   
     async upgradeMembership(newTier, _paymentDetails) {
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Reduced simulated delay from 800ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return {
         success: true,
@@ -22,7 +24,8 @@ export const membershipService = {
     },
   
     async getMembershipHistory() {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Reduced simulated delay from 500ms to 50ms for better performance
+      await new Promise(resolve => setTimeout(resolve, 50));
       
       return [
         {

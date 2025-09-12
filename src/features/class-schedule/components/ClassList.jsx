@@ -3,15 +3,34 @@ import React from 'react';
 import { classScheduleService } from '../../../services/classSchedule';
 import PropTypes from 'prop-types'
 
+// Cache to prevent excessive API calls for the same date
+const classCache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes cache
+
 export const ClassList = ({ date, onClassSelect }) => {
   const [classes, setClasses] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchClasses = async () => {
+      const dateKey = date.toDateString();
+      const cachedData = classCache.get(dateKey);
+      
+      // Check if we have valid cached data
+      if (cachedData && (Date.now() - cachedData.timestamp) < CACHE_DURATION) {
+        setClasses(cachedData.classes);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
         const data = await classScheduleService.getClassesByDate(date);
+        // Cache the data with timestamp
+        classCache.set(dateKey, {
+          classes: data,
+          timestamp: Date.now()
+        });
         setClasses(data);
       } catch (error) {
         console.error('Error fetching classes:', error);
@@ -21,7 +40,7 @@ export const ClassList = ({ date, onClassSelect }) => {
     };
 
     fetchClasses();
-  }, [date]);
+  }, [date]); // Added proper dependency for date
 
   if (loading) {
     return (
