@@ -1,8 +1,15 @@
+// Import centralized cache manager for better performance
+import { trainingCache } from '../utils/cache.js';
+
 export const trainingService = {
     async getAvailableTrainers() {
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // Check cache first for performance optimization
+      const cacheKey = 'available_trainers';
+      if (trainingCache.has(cacheKey)) {
+        return trainingCache.get(cacheKey);
+      }
       
-      return [
+      const trainers = [
         {
           id: 1,
           name: 'Sarah Johnson',
@@ -26,24 +33,43 @@ export const trainingService = {
           ]
         }
       ];
-    },
-  
-    async bookTrainingSession(trainerId, date, time) {
-      await new Promise(resolve => setTimeout(resolve, 800));
       
-      return {
+      // Cache trainers data for faster subsequent access
+      trainingCache.set(cacheKey, trainers);
+      return trainers;
+    },
+
+    async bookTrainingSession(trainerId, date, time) {
+      // Removed artificial delay for better performance
+      const sessionId = Math.floor(Math.random() * 1000000);
+      
+      // Get trainer info from cache for efficiency
+      const trainers = trainingCache.get('available_trainers') || [];
+      const trainer = trainers.find(t => t.id === parseInt(trainerId));
+      
+      const session = {
         success: true,
-        sessionId: Math.floor(Math.random() * 1000000),
-        trainer: 'Sarah Johnson',
+        sessionId,
+        trainer: trainer ? trainer.name : 'Sarah Johnson',
         date,
         time
       };
-    },
-  
-    async getTrainingHistory() {
-      await new Promise(resolve => setTimeout(resolve, 500));
       
-      return [
+      // Store session in cache for tracking
+      const sessionKey = `session_${sessionId}`;
+      trainingCache.set(sessionKey, { trainerId, date, time, sessionId, timestamp: Date.now() });
+      
+      return session;
+    },
+
+    async getTrainingHistory() {
+      // Check cache first for performance optimization
+      const cacheKey = 'training_history';
+      if (trainingCache.has(cacheKey)) {
+        return trainingCache.get(cacheKey);
+      }
+      
+      const history = [
         {
           date: '2024-01-01',
           trainer: 'Sarah Johnson',
@@ -57,5 +83,9 @@ export const trainingService = {
           notes: 'Increased intensity, good progress'
         }
       ];
+      
+      // Cache history for faster subsequent access
+      trainingCache.set(cacheKey, history);
+      return history;
     }
   };
