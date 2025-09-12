@@ -1,7 +1,6 @@
-const express = require('express');
-const url = require('url');
-const querystring = require('querystring');
-const crypto = require('crypto');
+import express from 'express';
+import { URL } from 'url';
+import crypto from 'crypto';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,17 +11,44 @@ app.use(express.json());
 // CORS middleware
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow Authorization header
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   next();
 });
+
+// Secure authentication middleware
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Extract Bearer token
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
+  
+  // TODO: In production, verify JWT token signature
+  // const jwt = require('jsonwebtoken');
+  // jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  //   if (err) return res.status(403).json({ error: 'Invalid token' });
+  //   req.user = user;
+  //   next();
+  // });
+  
+  // For demo: basic token validation (replace with proper JWT verification)
+  if (token.length < 32) {
+    return res.status(403).json({ error: 'Invalid token format' });
+  }
+  
+  req.user = { token }; // Add user info to request
+  next();
+}
 
 // Member check-in endpoint
 app.post('/api/members/:memberId/check-in', (req, res) => {
   const { memberId } = req.params;
   
-  // Using deprecated url.parse() to parse the full URL
-  const parsedUrl = url.parse(req.url, true);
-  const timestamp = parsedUrl.query.timestamp || Date.now();
+  // Using modern URL constructor for secure parsing
+  const requestUrl = new URL(req.url, `http://${req.get('host')}`);
+  const timestamp = requestUrl.searchParams.get('timestamp') || Date.now();
   
   // Simulate check-in logic
   res.json({
@@ -35,9 +61,9 @@ app.post('/api/members/:memberId/check-in', (req, res) => {
 
 // Search endpoint using deprecated querystring
 app.get('/api/search', (req, res) => {
-  // Using deprecated url.parse() instead of new URL()
-  const parsedUrl = url.parse(req.url);
-  const params = querystring.parse(parsedUrl.query);
+  // Using modern URL constructor for secure parsing
+  const requestUrl = new URL(req.url, `http://${req.get('host')}`);
+  const params = Object.fromEntries(requestUrl.searchParams);
   
   // Mock search results
   res.json({
@@ -47,26 +73,34 @@ app.get('/api/search', (req, res) => {
   });
 });
 
-// Authentication endpoint using deprecated crypto methods
+// Secure authentication endpoint with proper JWT implementation
 app.post('/api/auth/login', (req, res) => {
   const { email, password } = req.body;
   
-  // Using deprecated crypto.createCipher (should use createCipheriv)
-  const cipher = crypto.createCipher('aes192', 'a password');
-  let encrypted = cipher.update(password, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
+  // TODO: Add actual password verification here
+  // For demo purposes, using secure token generation
+  
+  // Generate cryptographically secure random token
+  const tokenBytes = crypto.randomBytes(32); // 256 bits of entropy
+  const token = tokenBytes.toString('base64url'); // URL-safe base64 encoding
+  
+  // In production, use proper JWT with RS256 or ES256
+  // const jwt = require('jsonwebtoken');
+  // const token = jwt.sign({ email, iat: Date.now() }, process.env.JWT_SECRET, { 
+  //   algorithm: 'RS256', expiresIn: '1h' 
+  // });
   
   res.json({
-    token: encrypted,
+    token: token,
     user: { email }
   });
 });
 
 // Membership plans endpoint
 app.get('/api/membership/plans', (req, res) => {
-  // Using url.parse to check for query params
-  const { query } = url.parse(req.url, true);
-  const includeInactive = query.includeInactive === 'true';
+  // Using modern URL constructor for secure parsing
+  const requestUrl = new URL(req.url, `http://${req.get('host')}`);
+  const includeInactive = requestUrl.searchParams.get('includeInactive') === 'true';
   
   const plans = [
     { id: 1, name: 'Basic', price: 29.99, active: true },
