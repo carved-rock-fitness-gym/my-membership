@@ -1,6 +1,7 @@
 // src/features/membership/components/PaymentForm.jsx
 import React, { useState } from 'react';
 import { validationUtils } from '../../../utils/validation';
+import { paymentService } from '../../../services/payment';
 import PropTypes from 'prop-types'
 
 export const PaymentForm = ({ tier, onSuccess }) => {
@@ -49,9 +50,18 @@ export const PaymentForm = ({ tier, onSuccess }) => {
     // Process payment
     setLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      onSuccess();
+      // Use actual payment service instead of simulation
+      const result = await paymentService.processPayment(
+        formData, 
+        tier.price, 
+        tier.memberId || null
+      );
+      
+      if (result.success) {
+        onSuccess(result);
+      } else {
+        throw new Error(result.message || 'Payment processing failed');
+      }
     } catch (error) {
       setError('Payment processing failed. Please try again: ' + error.message);
     } finally {

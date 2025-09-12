@@ -77,6 +77,92 @@ app.get('/api/membership/plans', (req, res) => {
   res.json(includeInactive ? plans : plans.filter(p => p.active));
 });
 
+// Payment processing endpoint
+app.post('/api/payments/process', (req, res) => {
+  const { cardNumber, expiryDate, cvv, name, email, amount, memberId } = req.body;
+  
+  // Validate required fields
+  if (!cardNumber || !expiryDate || !cvv || !name || !email || !amount) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required payment fields'
+    });
+  }
+
+  // Simulate payment processing with basic validation
+  if (cardNumber.length < 13 || !expiryDate.match(/^\d{2}\/\d{2}$/) || !cvv.match(/^\d{3,4}$/)) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid payment details'
+    });
+  }
+
+  // Generate transaction ID and simulate processing delay
+  const transactionId = crypto.randomUUID();
+  
+  setTimeout(() => {
+    res.json({
+      success: true,
+      transactionId,
+      amount,
+      memberId,
+      timestamp: new Date().toISOString(),
+      message: 'Payment processed successfully'
+    });
+  }, 1000);
+});
+
+// Membership payment processing endpoint  
+app.post('/api/payments/membership', (req, res) => {
+  const { cardNumber, expiryDate, cvv, name, email, newTier, memberId } = req.body;
+  
+  // Validate required fields
+  if (!cardNumber || !expiryDate || !cvv || !name || !email || !newTier || !memberId) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing required membership payment fields'
+    });
+  }
+
+  // Get tier pricing
+  const tierPricing = {
+    'Basic': 29.99,
+    'Premium': 49.99, 
+    'Elite': 99.99
+  };
+  
+  const amount = tierPricing[newTier];
+  if (!amount) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid membership tier'
+    });
+  }
+
+  // Simulate payment processing
+  if (cardNumber.length < 13) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid card number'
+    });
+  }
+
+  const transactionId = crypto.randomUUID();
+  
+  setTimeout(() => {
+    res.json({
+      success: true,
+      transactionId,
+      memberId,
+      newTier,
+      amount,
+      startDate: new Date().toISOString().split('T')[0],
+      nextBillingDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      message: 'Membership payment processed successfully'
+    });
+  }, 1200);
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

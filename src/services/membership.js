@@ -43,7 +43,30 @@ export const membershipService = {
       ];
     },
   
-    async processMembershipPayment(_paymentDetails) {
-      // ... implementation
+  async processMembershipPayment(paymentDetails, newTier, memberId) {
+    try {
+      // Import payment service for processing payment
+      const { paymentService } = await import('./payment.js');
+      
+      // Process the membership payment through payment service
+      const result = await paymentService.processMembershipPayment(paymentDetails, newTier, memberId);
+      
+      if (!result.success) {
+        throw new Error(result.message || 'Payment processing failed');
+      }
+      
+      return {
+        success: true,
+        tier: result.newTier,
+        transactionId: result.transactionId,
+        startDate: result.startDate,
+        nextBillingDate: result.nextBillingDate,
+        amount: result.amount
+      };
+    } catch (error) {
+      // Log error and return user-friendly response
+      console.error('Membership payment processing failed:', error);
+      throw new Error(`Failed to process membership payment: ${error.message}`);
     }
+  }
   };
